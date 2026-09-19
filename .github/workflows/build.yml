@@ -24,6 +24,10 @@ jobs:
         with:
           packages: platform-tools platforms;android-34 build-tools;34.0.0
 
+      - name: Link Command Line Tools for Build Script
+        run: |
+          ln -s $ANDROID_HOME/cmdline-tools/latest ./cmdline-tools
+
       - name: Create Custom Configuration File
         run: |
           mkdir -p confs

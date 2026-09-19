@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
     boolean JSCanOpenWindowsAutomatically = true;
     boolean DomStorageEnabled = true;
     boolean DatabaseEnabled = true;
-    boolean MediaPlaybackRequiresUserGesture = true;
+    boolean MediaPlaybackRequiresUserGesture = false; // Change from true to false
     boolean SavePassword = true;
     boolean AllowFileAccess = true;
     boolean AllowFileAccessFromFileURLs = true;
@@ -189,6 +189,22 @@ public class MainActivity extends AppCompatActivity {
         if (Intent.ACTION_VIEW.equals(action) && data != null) {
             mainURL = data.toString();
         }
+        // Inside your onCreate method:
+WebSettings webSettings = webview.getSettings();
+webSettings.setJavaScriptEnabled(true);
+webSettings.setDomStorageEnabled(true);
+webSettings.setMediaPlaybackRequiresUserGesture(false);
+
+// --- PASTE IT HERE ---
+webSettings.setSupportMultipleWindows(false);
+
+webview.setWebChromeClient(new WebChromeClient() {
+    @Override
+    public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, android.os.Message resultMsg) {
+        return false;
+    }
+});
+// ---------------------
 
         webview = findViewById(R.id.webView);
         webview.setAlpha(0f);

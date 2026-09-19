@@ -40,6 +40,7 @@ jobs:
       - name: Run Build Script
         run: |
           chmod +x make.sh
+          ./make.sh keygen
           ./make.sh build confs/kdramatagalogverse.conf
 
       - name: Upload Generated APK

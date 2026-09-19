@@ -128,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
     boolean JSCanOpenWindowsAutomatically = true;
     boolean DomStorageEnabled = true;
     boolean DatabaseEnabled = true;
-    boolean MediaPlaybackRequiresUserGesture = false; // Change from true to false
+    boolean MediaPlaybackRequiresUserGesture = true;
     boolean SavePassword = true;
     boolean AllowFileAccess = true;
     boolean AllowFileAccessFromFileURLs = true;
@@ -189,19 +189,6 @@ public class MainActivity extends AppCompatActivity {
         if (Intent.ACTION_VIEW.equals(action) && data != null) {
             mainURL = data.toString();
         }
-        // Inside your onCreate method:
-WebSettings webSettings = webview.getSettings();
-webSettings.setJavaScriptEnabled(true);
-webSettings.setDomStorageEnabled(true);
-webSettings.setMediaPlaybackRequiresUserGesture(false);
-webSettings.setSupportMultipleWindows(false);
-
-webview.setWebChromeClient(new WebChromeClient() {
-    @Override
-    public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, android.os.Message resultMsg) {
-        return false;
-    }
-});
 
         webview = findViewById(R.id.webView);
         webview.setAlpha(0f);
@@ -223,6 +210,7 @@ webview.setWebChromeClient(new WebChromeClient() {
         webSettings.setAllowFileAccessFromFileURLs(AllowFileAccessFromFileURLs);
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
+        webSettings.setSupportMultipleWindows(false); // Blocks pop-ups and extra windows
         webview.setWebContentsDebuggingEnabled(DebugWebView);
 
         if (allowMixedContent) {
@@ -568,6 +556,11 @@ webview.setWebChromeClient(new WebChromeClient() {
         Open HTML5 video in fullscreen
     */
     private class CustomWebChrome extends WebChromeClient {
+
+        @Override
+        public boolean onCreateWindow(WebView view, boolean isDialog, boolean isUserGesture, android.os.Message resultMsg) {
+            return false; // Blocks pop-ups and new window / ad tabs from spawning
+        }
 
         @Override
         public boolean onConsoleMessage(ConsoleMessage consoleMessage) {

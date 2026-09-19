@@ -2,33 +2,45 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.net.Uri;
 import java.io.ByteArrayInputStream;
 
 public class AdBlockWebViewClient extends WebViewClient {
 
-    // List of common ad and tracking domains to block
-    private static final String[] BLOCKED_DOMAINS = {
-        "doubleclick.net",
-        "googleads.g.doubleclick.net",
-        "googlesyndication.com",
-        "google-analytics.com",
-        "adservice.google.com",
-        "taboola.com"
+    // Allowlist containing Streamtape and its alternative domains / CDN nodes
+    private static final String[] ALLOWED_DOMAINS = {
+        "streamtape.com",
+        "streamta.net",
+        "streamtape.to",
+        "stape.fun",
+        "streamtape.xyz"
     };
 
     @Override
     public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
-        String url = request.getUrl().toString();
+        Uri uri = request.getUrl();
+        String host = uri.getHost();
 
-        // Check if the requested URL contains any ad domains
-        for (String domain : BLOCKED_DOMAINS) {
-            if (url.contains(domain)) {
-                // Block the ad by returning an empty response
-                return new WebResourceResponse("text/plain", "utf-8", new ByteArrayInputStream("".getBytes()));
+        // If the request has no host (e.g., local app data or assets), allow it
+        if (host == null) {
+            return super.shouldInterceptRequest(view, request);
+        }
+
+        // Check if the request host matches Streamtape or any of its subdomains
+        boolean isAllowed = false;
+        for (String allowedDomain : ALLOWED_DOMAINS) {
+            if (host.equals(allowedDomain) || host.endsWith("." + allowedDomain)) {
+                isAllowed = true;
+                break;
             }
         }
 
-        // Allow normal content to load
+        // If the domain is NOT Streamtape, block it instantly with an empty response
+        if (!isAllowed) {
+            return new WebResourceResponse("text/plain", "utf-8", new ByteArrayInputStream("".getBytes()));
+        }
+
+        // Allow legitimate Streamtape video streams and page files to load
         return super.shouldInterceptRequest(view, request);
     }
 }

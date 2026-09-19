@@ -194,8 +194,6 @@ WebSettings webSettings = webview.getSettings();
 webSettings.setJavaScriptEnabled(true);
 webSettings.setDomStorageEnabled(true);
 webSettings.setMediaPlaybackRequiresUserGesture(false);
-
-// --- PASTE IT HERE ---
 webSettings.setSupportMultipleWindows(false);
 
 webview.setWebChromeClient(new WebChromeClient() {
@@ -204,7 +202,6 @@ webview.setWebChromeClient(new WebChromeClient() {
         return false;
     }
 });
-// ---------------------
 
         webview = findViewById(R.id.webView);
         webview.setAlpha(0f);

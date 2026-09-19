@@ -32,7 +32,7 @@ jobs:
         run: |
           mkdir -p confs
           cat << 'EOF' > confs/kdramatagalogverse.conf
-          id = com.tagalogverse.app
+          id = TagalogVerse
           name = TagalogVerse
           mainURL = https://kdramatagalogverse.blogspot.com/
           EOF
